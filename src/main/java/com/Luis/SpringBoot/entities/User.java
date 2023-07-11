@@ -1,27 +1,34 @@
 package com.Luis.SpringBoot.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name="tb_user")
+@Table(name="tb_user")// Muda o nome da tabela no DB
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@Id
+	@Id //Dizendo para o DB que é uma tabela 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	private String email;
 	private String phone;
 	private String passWord;
+	
+	
+	@OneToMany(mappedBy = "client") //Um para muitos
+	private List<Order> orders = new ArrayList();
 	
 	public User() {
 	}
@@ -72,6 +79,10 @@ public class User implements Serializable {
 
 	public void setPassWord(String passWord) {
 		this.passWord = passWord;
+	}
+	
+	public List<Order> getOrders() {
+		return orders;
 	}
 
 	@Override
