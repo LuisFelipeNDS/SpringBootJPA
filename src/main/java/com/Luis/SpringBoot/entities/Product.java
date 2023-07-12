@@ -9,27 +9,34 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-
 
 @Entity
 @Table(name = "tb_Product")
 public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-	@Id //Dizendo para o DB que é uma tabela 
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+
+	@Id // Dizendo para o DB que é uma tabela
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
 	private String description;
 	private Double price;
 	private String imgUrl;
-	
-	@Transient
+
+	@ManyToMany
+	@JoinTable(name = "tb_product_category",
+	joinColumns = @JoinColumn(name = "product_id"), 
+	inverseJoinColumns = @JoinColumn(name = "category_id"))
+	// Nome da tabela
+	// Primeiro parametro o nome da chave estrangeira do Produto
+	// Segundo parametro chave estrangeira do produto da Categoria
 	private Set<Category> categories = new HashSet<>();
-	
-	public Product(){
+
+	public Product() {
 	}
 
 	public Product(Integer id, String name, String description, Double price, String imgUrl) {
