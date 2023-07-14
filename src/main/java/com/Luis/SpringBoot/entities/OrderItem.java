@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import com.Luis.SpringBoot.entities.pk.OrderItemPk;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -15,13 +16,12 @@ public class OrderItem implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@EmbeddedId //Por se tratar de um id "composto"
-	private OrderItemPk id;
+	private OrderItemPk id = new OrderItemPk();// sempre que for PK composta tem que instanciar ela para não começar valendo null
 	
 	private Integer quantity;
 	private Double price;
 	
 	public OrderItem() {
-		
 	}
 
 	public OrderItem(Order order, Product product, Integer quantity, Double price) {
@@ -31,6 +31,7 @@ public class OrderItem implements Serializable{
 		this.price = price;
 	}
 	
+	@JsonIgnore// Para evitar o loop infinito
 	public Order getOrder() {
 		return id.getOrder();
 	}
@@ -62,7 +63,7 @@ public class OrderItem implements Serializable{
 	public void setPrice(Double price) {
 		this.price = price;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
