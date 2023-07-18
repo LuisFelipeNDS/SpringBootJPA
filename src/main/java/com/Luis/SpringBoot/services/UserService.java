@@ -25,7 +25,11 @@ public class UserService {
 		Optional<User> obj = repository.findById(id);
 		
 		return obj.get(); //Operacao get() do Optional retorna um objeto do tipo que foi atribuido
-	}				
+	}	
+	
+	public User insert(User obj) {
+		return repository.save(obj);
+	}
 	
 	
 }

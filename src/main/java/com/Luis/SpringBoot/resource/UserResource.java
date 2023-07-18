@@ -1,13 +1,17 @@
 package com.Luis.SpringBoot.resource;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.Luis.SpringBoot.entities.User;
 import com.Luis.SpringBoot.services.UserService;
@@ -19,7 +23,7 @@ public class UserResource {
 	@Autowired
 	private UserService service;
 	
-	@GetMapping
+	@GetMapping // Metodo Get para recuperar dados do DB
 	public ResponseEntity<List<User>> findAll(){ 
 		List<User> list = service.findAll();	 	
 		// .ok() retorna a mensagem com sucesso para o http
@@ -34,18 +38,12 @@ public class UserResource {
 	
 	}
 	
+	@PostMapping// Post para inserir um novo recurso
+	public ResponseEntity<User> insert(@RequestBody User obj){//@RequestBody diz que o objeto no parametro ira chegar em forma de Json
+		obj = service.insert(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).body(obj);
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 }
