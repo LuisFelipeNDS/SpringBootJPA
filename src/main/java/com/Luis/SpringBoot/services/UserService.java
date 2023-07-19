@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.Luis.SpringBoot.entities.User;
 import com.Luis.SpringBoot.repositories.UserRepository;
+import com.Luis.SpringBoot.services.excepitions.ResourceNotFoundException;
 
 @Service
 //@Component registra a classe como um componente do Spring
@@ -23,8 +24,9 @@ public class UserService {
 	
 	public User findById(Long id){
 		Optional<User> obj = repository.findById(id);
-		
-		return obj.get(); //Operacao get() do Optional retorna um objeto do tipo que foi atribuido
+		//return obj.get(); //Operacao get() do Optional retorna um objeto do tipo que foi atribuido
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+		// Ira tentar pega a requisição get se não conseguir ele lança uma execao
 	}	
 	
 	public User insert(User obj) {
