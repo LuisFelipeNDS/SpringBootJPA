@@ -13,6 +13,8 @@ import com.Luis.SpringBoot.repositories.UserRepository;
 import com.Luis.SpringBoot.services.excepitions.DatabaseException;
 import com.Luis.SpringBoot.services.excepitions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 //@Component registra a classe como um componente do Spring
 //@Service registra um servico na camada de servico
@@ -49,9 +51,14 @@ public class UserService {
 	}
 	
 	public User update(Long id, User obj) {
-		User entity = repository.getReferenceById(id); //Objeto monitorado pelo JPA
-		updateData(entity, obj);
-		return repository.save(entity);
+		try {
+			User entity = repository.getReferenceById(id); //Objeto monitorado pelo JPA
+			updateData(entity, obj);
+			return repository.save(entity);
+		}
+		catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(User entity, User obj) {
