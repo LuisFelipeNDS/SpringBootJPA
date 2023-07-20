@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.Luis.SpringBoot.services.excepitions.DatabaseException;
 import com.Luis.SpringBoot.services.excepitions.ResourceNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,4 +24,16 @@ public class ResourceExceptionHandler {
 		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
 	}
+	
+	@ExceptionHandler(DatabaseException.class) 
+	// O metodo abaixo ira interceptar qualquer execao do tipo-
+	// -ResourceNotFoundException e ira trata-la conforme implementadp
+	public ResponseEntity<StandardError> dataBase(DatabaseException e, HttpServletRequest request){
+		String error = "Database Error";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(status).body(err);
+	}
+	
+	
 }
